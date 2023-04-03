@@ -1,6 +1,7 @@
 package com.example.javakafka.consumers;
 
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -30,6 +31,9 @@ public class MyConsumer {
                 "org.apache.kafka.common.serialization.StringDeserializer");
         props.setProperty("value.deserializer",
                 "org.apache.kafka.common.serialization.StringDeserializer");
+
+        props.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,"false");
+
         try (KafkaConsumer<String, String> consumer = new
                 KafkaConsumer<>(props);) {
 //            consumer.subscribe(Arrays.asList("ale-topic3"));
@@ -44,6 +48,7 @@ public class MyConsumer {
                         : records)
                     LOGGER.info(String.format("offset =  %s, partition =  %s , key =  %s, value=  %s",
                             record.offset(), record.partition(),record.key(), record.value()));
+                consumer.commitSync();
             }
         }
 
