@@ -4,6 +4,7 @@ package com.example.javakafka.consumers;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,14 +32,17 @@ public class MyConsumer {
                 "org.apache.kafka.common.serialization.StringDeserializer");
         try (KafkaConsumer<String, String> consumer = new
                 KafkaConsumer<>(props);) {
-            consumer.subscribe(Arrays.asList("ale-topic3"));
+//            consumer.subscribe(Arrays.asList("ale-topic3"));
+            TopicPartition topicPartition=new TopicPartition("ale-topic3",1);
 
+            consumer.assign(Arrays.asList(topicPartition));
+            consumer.seek(topicPartition,47);
             while (true) {
                 ConsumerRecords<String, String> records =
                         consumer.poll(Duration.ofMillis(100));
                 for (ConsumerRecord<String, String> record
                         : records)
-                    LOGGER.info(String.format("offset = %d, partition = %d , key = %d, value= %d ",
+                    LOGGER.info(String.format("offset =  %s, partition =  %s , key =  %s, value=  %s",
                             record.offset(), record.partition(),record.key(), record.value()));
             }
         }

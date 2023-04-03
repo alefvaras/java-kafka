@@ -25,7 +25,8 @@ public class MyProducer {
                 KafkaProducer<>(props);) {
             for (int i = 0; i < 100; i++) {
                 producer.send(new
-                        ProducerRecord<>("ale-topic3", "key "+i, "message"));
+//                        ProducerRecord<>("ale-topic3", (i%2==0)?"key-par":"key-impar", String.valueOf(i)));
+                        ProducerRecord<>("ale-topic3", "key", String.valueOf(i)));
             }
             producer.flush();
 
